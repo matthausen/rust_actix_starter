@@ -1,11 +1,11 @@
-use crate::api::interfaces::{User};
+use crate::api::interfaces::{UserSvc};
 
 #[derive(Clone)]
 pub struct UserService {
     app_version: String
 }
 
-impl User for UserService {
+impl UserSvc for UserService {
     fn do_something(&self, query: &str) -> String {
         format!("Doing something in the UserService: {}", query)
     }

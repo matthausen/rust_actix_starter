@@ -5,7 +5,7 @@ mod api;
 mod users;
 
 use crate::api::handler_index::index;
-use crate::api::interfaces::User;
+use crate::api::interfaces::UserSvc;
 use crate::users::service::{UserService};
 
 
@@ -16,7 +16,7 @@ async fn main() -> std::io::Result<()> {
 }
 
 
-pub fn create_server<T: User + Send + Sync + 'static + Clone>(
+pub fn create_server<T: UserSvc + Send + Sync + 'static + Clone>(
     user_svc: T,
 ) -> Result<Server, std::io::Error> {
     let server = HttpServer::new(move || {
