@@ -5,6 +5,7 @@ mod api;
 mod users;
 
 use crate::api::handler_index::index;
+use crate::api::handler_create_user::{create_user};
 use crate::api::interfaces::UserSvc;
 use crate::users::service::{UserService};
 
@@ -23,6 +24,7 @@ pub fn create_server<T: UserSvc + Send + Sync + 'static + Clone>(
         App::new()
             .data(user_svc.clone())
             .route("/{query}", web::get().to(index::<T>))
+            .route("/user", web::post().to(create_user::<T>))
     })
     .bind("127.0.0.1:8080")?
     .run();
