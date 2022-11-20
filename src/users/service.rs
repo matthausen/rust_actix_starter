@@ -1,6 +1,16 @@
+use async_trait::async_trait;
+
+
 use crate::api::interfaces::{UserSvc};
-use crate::users::storage::model::{User, UserCreateRequest};
+use crate::users::storage::model::{User};
+use crate::users::storage::service::{Storage};
 use chrono::{Utc};
+
+
+#[async_trait]
+pub trait UserStorage {
+    async fn add_item(&self, user: User) -> User;
+}
 
 
 #[derive(Clone)]
@@ -21,16 +31,11 @@ impl UserSvc for UserService {
         format!("Doing something in the UserService: {}", query)
     }
 
-    fn create(&self, to_create: &UserCreateRequest) -> User {
+    fn create(&self, to_create: User) -> User { // return pointer to user or error
         // do something
-        User { 
-            id: String::from("123"), 
-            first_name: String::from("John"), 
-            last_name: String::from("Wick"), 
-            email: String::from("john.wick@example.com"), 
-            password: String::from("****hidden****"), 
-            age: String::from("32"), 
-        }
+        let result = self::Storage::add_item(&self::Storage, to_create);
+
+        return result
     }
 }
 

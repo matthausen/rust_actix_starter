@@ -22,6 +22,20 @@ pub async fn create_user<T: UserSvc>(
 
     let server_req = serde_json::from_slice::<UserCreateRequest>(&body)?;
 
-    let user = user.into_inner().create(&server_req);
+    let to_create = parse_user_req_to_use_model(server_req);
+
+    let user = user.into_inner().create(to_create);
     Ok(HttpResponse::Ok().json(user))
+}
+
+
+fn parse_user_req_to_use_model(servReq: UserCreateRequest) -> User {
+    User {
+        id: servReq.id,
+        first_name: servReq.first_name,
+        last_name: servReq.last_name,
+        email: servReq.email,
+        password: String::from("MUST_REPLACE"),
+        age: servReq.age,
+    }
 }

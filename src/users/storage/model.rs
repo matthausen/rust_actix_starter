@@ -1,7 +1,7 @@
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Serialize, Deserialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct User {
     pub id: String,
     pub first_name: String,
@@ -14,7 +14,7 @@ pub struct User {
 
 
 // User Create request for POST -> Create User
-#[derive(Clone, Deserialize, Serialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct UserCreateRequest {
     pub id: String,
     pub first_name: String,
