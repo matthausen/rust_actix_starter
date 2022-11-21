@@ -1,8 +1,8 @@
-use actix_web::{web, HttpResponse, Responder, error, Error};
+use actix_web::{web, HttpResponse, error, Error};
 use futures::StreamExt;
 
 use crate::api::interfaces::{UserSvc};
-use crate::users::storage::model::{UserCreateRequest, User};
+use crate::users::model::{UserCreateRequest, User};
 
 const MAX_SIZE: usize = 262_144; // max payload size is 256k
 
@@ -24,18 +24,22 @@ pub async fn create_user<T: UserSvc>(
 
     let to_create = parse_user_req_to_use_model(server_req);
 
-    let user = user.into_inner().create(to_create);
-    Ok(HttpResponse::Ok().json(user))
+    let user = user.into_inner().add_item(to_create).await;
+    match user {
+        Ok(user) => Ok(HttpResponse::Ok().json(user)),
+        Err(_) => Ok(HttpResponse::BadRequest().json("error"))
+    }
+    
 }
 
 
-fn parse_user_req_to_use_model(servReq: UserCreateRequest) -> User {
+fn parse_user_req_to_use_model(serv_req: UserCreateRequest) -> User {
     User {
-        id: servReq.id,
-        first_name: servReq.first_name,
-        last_name: servReq.last_name,
-        email: servReq.email,
+        id: serv_req.id,
+        first_name: serv_req.first_name,
+        last_name: serv_req.last_name,
+        email: serv_req.email,
         password: String::from("MUST_REPLACE"),
-        age: servReq.age,
+        age: serv_req.age,
     }
 }

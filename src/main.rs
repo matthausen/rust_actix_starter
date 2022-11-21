@@ -17,7 +17,6 @@ use crate::api::handler_index::index;
 use crate::api::handler_create_user::{create_user};
 use crate::api::interfaces::UserSvc;
 
-use crate::users::storage::service::{Storage};
 use crate::users::service::{UserService};
 
 
@@ -38,8 +37,7 @@ async fn main() -> std::io::Result<()> {
     create_table_if_not_exists(&cfg, &client).await;
 
     // Services init
-    let user_storage: Storage = Storage::new(&cfg.yml_cfg.dynamodb.table_name);
-    let user_service = UserService::new();
+    let user_service = UserService::new(client, &cfg.yml_cfg.dynamodb.table_name);
     create_server(user_service).unwrap().await
 }
 
